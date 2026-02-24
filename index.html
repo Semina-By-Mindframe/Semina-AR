@@ -7,37 +7,28 @@
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-:root{--g:#2F5233;--g2:#4ade80;--gl:rgba(18,18,18,0.78);--gb:rgba(255,255,255,0.12);--f:'DM Sans',sans-serif}
+:root{--g:#2F5233;--g2:#4ade80;--gl:rgba(18,18,18,0.8);--gb:rgba(255,255,255,0.13);--f:'DM Sans',sans-serif}
 html,body{width:100%;height:100%;overflow:hidden;background:#111;font-family:var(--f)}
 
-/* CAMERA BG */
+/* CAMERA */
 #cam{position:fixed;inset:0;z-index:0}
-#vid{width:100%;height:100%;object-fit:cover;display:none}
-#fbg{
-  width:100%;height:100%;display:none;
-  background:linear-gradient(175deg,#1a2e1c 0%,#0d1a0e 50%,#0a0f0a 100%);
-  position:relative;overflow:hidden;
-}
-#fbg::after{
-  content:'';position:absolute;inset:0;
-  background-image:linear-gradient(rgba(255,255,255,0.028) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.028) 1px,transparent 1px);
-  background-size:68px 68px;
-}
+#vid{width:100%;height:100%;object-fit:cover}
+#fbg{width:100%;height:100%;display:none;background:linear-gradient(175deg,#1a2e1c,#0a0f0a)}
 
-/* ONE SCREEN AT A TIME */
+/* SCREENS */
 .scr{position:fixed;inset:0;display:none;flex-direction:column;z-index:10}
 .scr.on{display:flex}
 
 /* TOPBAR */
-.tb{display:flex;justify-content:space-between;align-items:center;padding:52px 16px 0;flex-shrink:0}
-.lc{display:flex;align-items:center;gap:7px;background:var(--gl);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid var(--gb);border-radius:50px;padding:10px 15px;color:#fff;font-size:14px;font-weight:600}
+.tb{display:flex;justify-content:space-between;align-items:center;padding:54px 16px 0;flex-shrink:0}
+.lc{display:flex;align-items:center;gap:7px;background:var(--gl);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid var(--gb);border-radius:50px;padding:10px 15px;color:#fff;font-size:14px;font-weight:600;cursor:pointer}
 .lc svg{width:13px;height:13px;opacity:.7;flex-shrink:0}
 .bts{display:flex;gap:8px}
 .ib{width:46px;height:46px;background:var(--gl);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid var(--gb);border-radius:13px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:#fff}
 .ib:active{opacity:.65}
 .ib svg{width:19px;height:19px}
 
-/* ── LOADING ── */
+/* LOADING */
 #sl{background:#050f06;align-items:center;justify-content:center;gap:18px}
 .logo{font-size:28px;font-weight:800;color:#fff;letter-spacing:-1px}
 .logo span{color:var(--g2)}
@@ -45,7 +36,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#111;font-family:var
 @keyframes sp{to{transform:rotate(360deg)}}
 .ltx{color:rgba(255,255,255,.32);font-size:14px}
 
-/* ── PERMISSION ── */
+/* PERMISSION */
 #sp2{background:rgba(0,0,0,.94);align-items:center;justify-content:center;gap:18px;padding:40px 30px;text-align:center}
 .pi2{width:76px;height:76px;background:rgba(74,222,128,.1);border-radius:22px;display:flex;align-items:center;justify-content:center}
 .pi2 svg{width:38px;height:38px;color:var(--g2)}
@@ -53,13 +44,39 @@ html,body{width:100%;height:100%;overflow:hidden;background:#111;font-family:var
 .ps{font-size:14px;color:rgba(255,255,255,.4);line-height:1.65;max-width:255px}
 .pb{padding:15px 42px;background:var(--g);color:#fff;border:none;border-radius:50px;font-size:16px;font-weight:700;font-family:var(--f);cursor:pointer}
 
-/* ── SCAN ── */
-#ss{position:relative}
-.mid{flex:1;position:relative;display:flex;align-items:center;justify-content:center}
+/* LOCATION PICKER MODAL */
+#locmodal{
+  position:fixed;inset:0;z-index:100;background:rgba(0,0,0,.6);
+  display:none;align-items:flex-end;
+}
+#locmodal.on{display:flex}
+.locsheet{
+  width:100%;background:#1a1a1a;border-radius:24px 24px 0 0;
+  padding:12px 20px 44px;animation:bsu .35s cubic-bezier(.34,1.56,.64,1);
+}
+.locopt{
+  display:flex;align-items:center;gap:12px;
+  padding:14px 0;border-bottom:1px solid rgba(255,255,255,.08);
+  cursor:pointer;color:#fff;font-size:16px;font-weight:500;
+}
+.locopt:last-child{border-bottom:none}
+.locopt svg{width:18px;height:18px;color:rgba(255,255,255,.5)}
+.locopt.active .locmark{background:var(--g2);border-color:var(--g2)}
+.locmark{width:20px;height:20px;border-radius:50%;border:2px solid rgba(255,255,255,.3);flex-shrink:0;margin-left:auto;transition:all .2s}
+.loctitle{font-size:13px;font-weight:700;color:rgba(255,255,255,.4);text-transform:uppercase;letter-spacing:.8px;padding:16px 0 8px}
 
-/* reticle */
-.ret{width:110px;height:110px;position:relative;animation:rp 2.2s ease-in-out infinite;flex-shrink:0}
-@keyframes rp{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.58;transform:scale(1.07)}}
+/* SCAN SCREEN */
+#ss{position:relative}
+.mid{flex:1;position:relative}
+
+/* Reticle — centered in mid */
+.ret{
+  position:absolute;top:36%;left:50%;
+  transform:translate(-50%,-50%);
+  width:110px;height:110px;
+  animation:rp 2.2s ease-in-out infinite;
+}
+@keyframes rp{0%,100%{opacity:1;transform:translate(-50%,-50%) scale(1)}50%{opacity:.6;transform:translate(-50%,-50%) scale(1.08)}}
 .rc{position:absolute;width:25px;height:25px;border-color:#fff;border-style:solid}
 .rc.tl{top:0;left:0;border-width:3px 0 0 3px;border-radius:7px 0 0 0}
 .rc.tr{top:0;right:0;border-width:3px 3px 0 0;border-radius:0 7px 0 0}
@@ -69,27 +86,43 @@ html,body{width:100%;height:100%;overflow:hidden;background:#111;font-family:var
 .ri svg{width:32px;height:32px;color:#fff;opacity:.85}
 
 /* scan line */
-.sl2{position:absolute;left:50%;transform:translateX(-50%);width:165px;height:2px;background:linear-gradient(90deg,transparent,var(--g2),transparent);animation:slm 2.2s ease-in-out infinite;border-radius:2px}
-@keyframes slm{0%{top:18%;opacity:0}10%{opacity:1}90%{opacity:1}100%{top:82%;opacity:0}}
+.sl2{
+  position:absolute;left:50%;transform:translateX(-50%);
+  width:165px;height:2px;
+  background:linear-gradient(90deg,transparent,var(--g2),transparent);
+  animation:slm 2.2s ease-in-out infinite;border-radius:2px;
+}
+@keyframes slm{0%{top:20%;opacity:0}10%{opacity:1}90%{opacity:1}100%{top:70%;opacity:0}}
 
-/* progress card */
-.pc{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);background:var(--gl);backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px);border:1px solid var(--gb);border-radius:18px;padding:14px 16px;width:236px;display:none;animation:pca .4s cubic-bezier(.34,1.56,.64,1)}
+/* progress card — centered */
+.pc{
+  position:absolute;top:36%;left:50%;
+  transform:translate(-50%,-50%);
+  background:var(--gl);backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px);
+  border:1px solid var(--gb);border-radius:18px;padding:14px 16px;width:236px;
+  display:none;animation:pca .4s cubic-bezier(.34,1.56,.64,1);
+}
 .pc.on{display:block}
-@keyframes pca{from{opacity:0;transform:translate(-50%,-44%)}to{opacity:1;transform:translate(-50%,-50%)}}
+@keyframes pca{from{opacity:0;transform:translate(-50%,-46%)}to{opacity:1;transform:translate(-50%,-50%)}}
 .pch{display:flex;align-items:center;justify-content:space-between;margin-bottom:5px}
 .pcl{display:flex;align-items:center;gap:7px;color:#fff;font-size:16px;font-weight:700}
 .pck{width:20px;height:20px;background:var(--g2);border-radius:50%;display:flex;align-items:center;justify-content:center}
 .pck svg{width:11px;height:11px;color:#000}
-.pcn{width:30px;height:30px;background:rgba(255,255,255,.13);border-radius:9px;display:flex;align-items:center;justify-content:center;cursor:pointer}
-.pcn svg{width:14px;height:14px;color:#fff}
-.pcs{color:rgba(255,255,255,.42);font-size:12px}
+.pcnx{width:30px;height:30px;background:rgba(255,255,255,.13);border-radius:9px;display:flex;align-items:center;justify-content:center;cursor:pointer}
+.pcnx svg{width:14px;height:14px;color:#fff}
+.pcs2{color:rgba(255,255,255,.42);font-size:12px}
 .pcd{display:flex;gap:5px;margin-top:9px}
 .d{height:4px;border-radius:2px;background:rgba(255,255,255,.16);flex:1;transition:background .5s}
 .d.on{background:var(--g2)}
 .d.dn{background:rgba(74,222,128,.38)}
 
 /* final banner */
-.lb{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);background:var(--gl);backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px);border:1px solid var(--gb);border-radius:18px;padding:16px 18px;width:260px;display:none}
+.lb{
+  position:absolute;top:36%;left:50%;
+  transform:translate(-50%,-50%);
+  background:var(--gl);backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px);
+  border:1px solid var(--gb);border-radius:18px;padding:16px 18px;width:260px;display:none;
+}
 .lb.on{display:block}
 .lbh{display:flex;align-items:center;justify-content:space-between}
 .lbt{font-size:20px;font-weight:800;color:#fff}
@@ -97,19 +130,36 @@ html,body{width:100%;height:100%;overflow:hidden;background:#111;font-family:var
 .la{width:34px;height:34px;background:rgba(255,255,255,.12);border-radius:10px;display:flex;align-items:center;justify-content:center;cursor:pointer}
 .la svg{width:16px;height:16px;color:#fff}
 
-/* AR plant */
-.ap{position:absolute;bottom:32%;left:50%;transform:translateX(-50%);display:none;flex-direction:column;align-items:center;animation:api .6s cubic-bezier(.34,1.56,.64,1)}
+/* AR plant — lower on screen */
+.ap{z-index:5;
+  position:absolute;bottom:22%;left:50%;
+  transform:translateX(-50%);
+  display:none;flex-direction:column;align-items:center;
+  animation:api .6s cubic-bezier(.34,1.56,.64,1);
+}
 .ap.on{display:flex}
 @keyframes api{from{opacity:0;transform:translateX(-50%) scale(.1)}to{opacity:1;transform:translateX(-50%) scale(1)}}
-.psvg{width:86px;height:112px;filter:drop-shadow(0 10px 22px rgba(0,0,0,.6))}
-.psh{width:92px;height:14px;background:radial-gradient(ellipse,rgba(0,0,0,.5) 0%,transparent 70%);filter:blur(5px);margin-top:-6px}
+.psvg{width:90px;height:118px;filter:drop-shadow(0 12px 24px rgba(0,0,0,.65))}
+.psh{width:94px;height:14px;background:radial-gradient(ellipse,rgba(0,0,0,.55) 0%,transparent 70%);filter:blur(5px);margin-top:-6px}
 
 /* surface */
-.su{position:absolute;bottom:26%;left:50%;transform:translateX(-50%) perspective(250px) rotateX(62deg);width:150px;height:82px;background:linear-gradient(135deg,rgba(74,222,128,.2),rgba(47,82,51,.14));border:1px solid rgba(74,222,128,.32);border-radius:7px;display:none}
+.su{
+  position:absolute;bottom:18%;left:50%;
+  transform:translateX(-50%) perspective(250px) rotateX(62deg);
+  width:150px;height:82px;
+  background:linear-gradient(135deg,rgba(74,222,128,.2),rgba(47,82,51,.14));
+  border:1px solid rgba(74,222,128,.32);border-radius:7px;display:none;
+}
 .su.on{display:block}
 
 /* toast */
-.mt{position:absolute;bottom:22%;left:50%;transform:translateX(-50%);background:var(--gl);backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px);border:1px solid var(--gb);border-radius:18px;padding:12px 16px;display:none;align-items:center;gap:12px;min-width:235px;animation:mta .35s cubic-bezier(.34,1.56,.64,1)}
+.mt{
+  position:absolute;bottom:5%;left:50%;transform:translateX(-50%);
+  background:var(--gl);backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px);
+  border:1px solid var(--gb);border-radius:18px;padding:12px 16px;
+  display:none;align-items:center;gap:12px;min-width:235px;
+  animation:mta .35s cubic-bezier(.34,1.56,.64,1);
+}
 .mt.on{display:flex}
 @keyframes mta{from{opacity:0;transform:translateX(-50%) translateY(12px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}
 .mti{width:42px;height:42px;background:#fff;border-radius:11px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
@@ -126,7 +176,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#111;font-family:var
 @keyframes cva{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
 @keyframes cvl{0%,100%{transform:translateX(0)}50%{transform:translateX(-5px)}}
 
-/* ── CUSTOMIZE ── */
+/* CUSTOMIZE */
 #sc2{justify-content:space-between}
 .sp{flex:1}
 .bs{background:#fff;border-radius:28px 28px 0 0;padding:12px 22px 44px;flex-shrink:0;animation:bsu .5s cubic-bezier(.34,1.56,.64,1)}
@@ -139,23 +189,23 @@ html,body{width:100%;height:100%;overflow:hidden;background:#111;font-family:var
 .sr2{display:flex;align-items:center;justify-content:space-between;margin-bottom:11px}
 .sl3{font-size:15px;font-weight:600;color:#111}
 .sv{font-size:14px;color:#999;font-weight:500}
-.st{position:relative;width:100%;height:6px;background:#eee;border-radius:3px;margin-bottom:26px}
+.stt{position:relative;width:100%;height:6px;background:#eee;border-radius:3px;margin-bottom:26px}
 .sf{height:100%;background:var(--g);border-radius:3px;width:60%;transition:width .1s}
 input[type=range]{position:absolute;inset:-8px 0;width:100%;opacity:0;cursor:pointer;height:22px}
 .stb{position:absolute;top:50%;left:60%;transform:translate(-50%,-50%);width:20px;height:20px;background:#fff;border:2px solid var(--g);border-radius:50%;pointer-events:none;box-shadow:0 2px 8px rgba(0,0,0,.15);transition:left .1s}
 .cb{width:100%;padding:17px;background:var(--g);color:#fff;border:none;border-radius:50px;font-size:17px;font-weight:700;font-family:var(--f);cursor:pointer}
 .cb:active{opacity:.88}
 
-/* ── RECOMMEND ── */
+/* RECOMMEND */
 #sr2{justify-content:space-between}
 .lca{margin:16px 16px 0;background:var(--gl);backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px);border:1px solid var(--gb);border-radius:18px;padding:16px 18px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
 .lca .lt{font-size:20px;font-weight:800;color:#fff}
 .lca .ls{font-size:13px;color:rgba(255,255,255,.4);margin-top:3px}
 .rs{background:var(--gl);backdrop-filter:blur(28px);-webkit-backdrop-filter:blur(28px);border:1px solid var(--gb);border-radius:28px 28px 0 0;padding:12px 22px 50px;flex-shrink:0;animation:bsu .5s cubic-bezier(.34,1.56,.64,1)}
 .rt{font-size:20px;font-weight:700;color:#fff;margin-bottom:14px}
-.pcs{display:flex;gap:12px;overflow-x:auto;padding-bottom:6px;-webkit-overflow-scrolling:touch;scrollbar-width:none}
-.pcs::-webkit-scrollbar{display:none}
-.pc2{background:#fff;border-radius:18px;padding:12px;min-width:152px;flex-shrink:0;cursor:pointer;transition:transform .2s;overflow:visible}
+.pcs3{display:flex;gap:12px;overflow-x:auto;padding-bottom:6px;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+.pcs3::-webkit-scrollbar{display:none}
+.pc2{background:#fff;border-radius:18px;padding:12px;min-width:152px;flex-shrink:0;cursor:pointer;transition:transform .2s;overflow:visible;padding-top:20px}
 .pc2:active{transform:scale(.95)}
 .pc2 .pn{font-size:15px;font-weight:700;color:#111;margin-bottom:2px}
 .pc2 .pst{font-size:12px;font-weight:600;color:#1F8A3D;margin-bottom:5px}
@@ -164,10 +214,42 @@ input[type=range]{position:absolute;inset:-8px 0;width:100%;opacity:0;cursor:poi
 </head>
 <body>
 
-<!-- BG -->
 <div id="cam">
   <video id="vid" autoplay playsinline muted></video>
   <div id="fbg"></div>
+</div>
+
+<!-- Location picker modal -->
+<div id="locmodal">
+  <div class="locsheet">
+    <div class="bh"></div>
+    <div class="loctitle">Choose Location</div>
+    <div class="locopt active" onclick="setLoc('Balcony',this)">
+      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg>
+      Balcony
+      <div class="locmark"></div>
+    </div>
+    <div class="locopt" onclick="setLoc('Living Room',this)">
+      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M20 7H4a2 2 0 00-2 2v6a2 2 0 002 2h16a2 2 0 002-2V9a2 2 0 00-2-2z"/></svg>
+      Living Room
+      <div class="locmark"></div>
+    </div>
+    <div class="locopt" onclick="setLoc('Bedroom',this)">
+      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+      Bedroom
+      <div class="locmark"></div>
+    </div>
+    <div class="locopt" onclick="setLoc('Kitchen',this)">
+      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2M9 9h.01M15 9h.01"/></svg>
+      Kitchen
+      <div class="locmark"></div>
+    </div>
+    <div class="locopt" onclick="setLoc('Garden',this)">
+      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M12 22V12m0 0C12 7 7 4 3 6c0 4 3 7 9 6m0-6c0-5 5-8 9-6 0 4-3 7-9 6"/></svg>
+      Garden
+      <div class="locmark"></div>
+    </div>
+  </div>
 </div>
 
 <!-- LOADING -->
@@ -193,19 +275,28 @@ input[type=range]{position:absolute;inset:-8px 0;width:100%;opacity:0;cursor:poi
 <!-- SCAN -->
 <div class="scr" id="ss">
   <div class="tb">
-    <div class="lc">
+    <div class="lc" onclick="openLoc()">
       <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z"/></svg>
-      Balcony
+      <span id="locname">Balcony</span>
     </div>
     <div class="bts">
-      <div class="ib"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></div>
-      <div class="ib" onclick="go('sp2')"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg></div>
+      <!-- Flip camera -->
+      <div class="ib" onclick="flipCam()" title="Flip camera">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M16 3h5m0 0v5m0-5l-6 6M5 3a2 2 0 00-2 2v1c0 8.284 6.716 15 15 15h1a2 2 0 002-2v-3.28a1 1 0 00-.684-.948l-4.493-1.498a1 1 0 00-1.21.502l-1.13 2.257a11.042 11.042 0 01-5.516-5.517l2.257-1.128a1 1 0 00.502-1.21L9.228 3.683A1 1 0 008.279 3H5z"/></svg>
+      </div>
+      <div class="ib" onclick="go('sp2')">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+      </div>
     </div>
   </div>
+
   <div class="mid">
+    <!-- Reticle -->
     <div class="ret" id="ret">
       <div class="rc tl"></div><div class="rc tr"></div><div class="rc bl"></div><div class="rc br"></div>
-      <div class="ri"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M21 7.5l-9-5.25L3 7.5m18 0l-9 5.25m9-5.25v9l-9 5.25M3 7.5l9 5.25M3 7.5v9l9 5.25m0-9v9"/></svg></div>
+      <div class="ri">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M21 7.5l-9-5.25L3 7.5m18 0l-9 5.25m9-5.25v9l-9 5.25M3 7.5l9 5.25M3 7.5v9l9 5.25m0-9v9"/></svg>
+      </div>
     </div>
     <div class="sl2"></div>
 
@@ -214,11 +305,11 @@ input[type=range]{position:absolute;inset:-8px 0;width:100%;opacity:0;cursor:poi
       <div class="pch">
         <div class="pcl">
           <div class="pck"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg></div>
-          Balcony
+          <span id="pcloc">Balcony</span>
         </div>
-        <div class="pcn"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5"/></svg></div>
+        <div class="pcnx"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5"/></svg></div>
       </div>
-      <div class="pcs" id="psub">1/3 surface Detected</div>
+      <div class="pcs2" id="psub">1/3 surface Detected</div>
       <div class="pcd">
         <div class="d on" id="d1"></div>
         <div class="d" id="d2"></div>
@@ -229,7 +320,7 @@ input[type=range]{position:absolute;inset:-8px 0;width:100%;opacity:0;cursor:poi
     <!-- Final banner -->
     <div class="lb" id="lb">
       <div class="lbh">
-        <div class="lbt">Balcony</div>
+        <div class="lbt" id="lbname">Balcony</div>
         <div class="la" onclick="go('sc2')"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 19.5l15-15m0 0H8.25m11.25 0v11.25"/></svg></div>
       </div>
       <div class="lbs">3/3 surface</div>
@@ -253,14 +344,14 @@ input[type=range]{position:absolute;inset:-8px 0;width:100%;opacity:0;cursor:poi
     </div>
 
     <!-- Forward arrows -->
-    <div class="ar" id="af" style="bottom:29%;left:50%;transform:translateX(-50%);flex-direction:column;gap:3px">
+    <div class="ar" id="af" style="bottom:9%;left:50%;transform:translateX(-50%);flex-direction:column;gap:3px;align-items:center">
       <svg class="cv" width="28" height="17" viewBox="0 0 28 17" fill="currentColor"><path d="M14 0l14 17H0z"/></svg>
       <svg class="cv" width="28" height="17" viewBox="0 0 28 17" fill="currentColor"><path d="M14 0l14 17H0z"/></svg>
       <svg class="cv" width="28" height="17" viewBox="0 0 28 17" fill="currentColor"><path d="M14 0l14 17H0z"/></svg>
     </div>
 
     <!-- Left arrows -->
-    <div class="ar" id="al" style="bottom:34%;left:18%;transform:translateX(-50%);flex-direction:row;gap:3px">
+    <div class="ar" id="al" style="bottom:20%;left:12%;flex-direction:row;gap:3px;align-items:center">
       <svg class="cv" width="17" height="28" viewBox="0 0 17 28" fill="currentColor" style="animation-name:cvl"><path d="M17 14L0 0v28z"/></svg>
       <svg class="cv" width="17" height="28" viewBox="0 0 17 28" fill="currentColor" style="animation-name:cvl"><path d="M17 14L0 0v28z"/></svg>
       <svg class="cv" width="17" height="28" viewBox="0 0 17 28" fill="currentColor" style="animation-name:cvl"><path d="M17 14L0 0v28z"/></svg>
@@ -280,9 +371,12 @@ input[type=range]{position:absolute;inset:-8px 0;width:100%;opacity:0;cursor:poi
 <!-- CUSTOMIZE -->
 <div class="scr" id="sc2">
   <div class="tb">
-    <div class="lc"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z"/></svg>Balcony</div>
+    <div class="lc" onclick="openLoc()">
+      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z"/></svg>
+      <span class="locname2">Balcony</span>
+    </div>
     <div class="bts">
-      <div class="ib"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/></svg></div>
+      <div class="ib" onclick="flipCam()"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M16 3h5m0 0v5m0-5l-6 6M5 3a2 2 0 00-2 2v1c0 8.284 6.716 15 15 15h1a2 2 0 002-2v-3.28a1 1 0 00-.684-.948l-4.493-1.498a1 1 0 00-1.21.502l-1.13 2.257a11.042 11.042 0 01-5.516-5.517l2.257-1.128a1 1 0 00.502-1.21L9.228 3.683A1 1 0 008.279 3H5z"/></svg></div>
       <div class="ib" onclick="go('ss')"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg></div>
     </div>
   </div>
@@ -297,7 +391,7 @@ input[type=range]{position:absolute;inset:-8px 0;width:100%;opacity:0;cursor:poi
       <button class="pob" onclick="selP(this)">grow bag</button>
     </div>
     <div class="sr2"><div class="sl3">Size</div><div class="sv" id="sv">60%</div></div>
-    <div class="st">
+    <div class="stt">
       <div class="sf" id="sf"></div>
       <div class="stb" id="stb"></div>
       <input type="range" min="10" max="100" value="60" oninput="updS(this)"/>
@@ -309,21 +403,24 @@ input[type=range]{position:absolute;inset:-8px 0;width:100%;opacity:0;cursor:poi
 <!-- RECOMMEND -->
 <div class="scr" id="sr2">
   <div class="tb">
-    <div class="lc"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z"/></svg>Balcony</div>
+    <div class="lc" onclick="openLoc()">
+      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z"/></svg>
+      <span class="locname2">Balcony</span>
+    </div>
     <div class="bts">
-      <div class="ib"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/></svg></div>
+      <div class="ib" onclick="flipCam()"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M16 3h5m0 0v5m0-5l-6 6M5 3a2 2 0 00-2 2v1c0 8.284 6.716 15 15 15h1a2 2 0 002-2v-3.28a1 1 0 00-.684-.948l-4.493-1.498a1 1 0 00-1.21.502l-1.13 2.257a11.042 11.042 0 01-5.516-5.517l2.257-1.128a1 1 0 00.502-1.21L9.228 3.683A1 1 0 008.279 3H5z"/></svg></div>
       <div class="ib" onclick="go('ss')"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg></div>
     </div>
   </div>
   <div class="lca">
-    <div><div class="lt">Balcony</div><div class="ls">3/3 surface</div></div>
+    <div><div class="lt" id="recloc">Balcony</div><div class="ls">3/3 surface</div></div>
     <div class="la" onclick="go('sc2')"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 19.5l15-15m0 0H8.25m11.25 0v11.25"/></svg></div>
   </div>
   <div class="sp"></div>
   <div class="rs">
     <div class="bh" style="background:rgba(255,255,255,.18)"></div>
     <div class="rt">Recommended Plants</div>
-    <div class="pcs" id="pcs"><div style="color:rgba(255,255,255,.35);font-size:14px;padding:10px 0">Loading…</div></div>
+    <div class="pcs3" id="pcs3"><div style="color:rgba(255,255,255,.35);font-size:14px;padding:10px 0">Loading…</div></div>
   </div>
 </div>
 
@@ -333,11 +430,39 @@ input[type=range]{position:absolute;inset:-8px 0;width:100%;opacity:0;cursor:poi
 const SU='https://eqhgcnzyiwgdtevxdehg.supabase.co';
 const SK='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVxaGdjbnp5aXdnZHRldnhkZWhnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njk2NTcyNTgsImV4cCI6MjA4NTIzMzI1OH0.7TVUKQCStGSK5-H6eNicMHY8weOo8eAtEdDpbROX810';
 
-function go(id){document.querySelectorAll('.scr').forEach(s=>s.classList.remove('on'));document.getElementById(id).classList.add('on')}
+let facingMode='environment';
+let currentStream=null;
+let currentLoc='Balcony';
 
+function go(id){
+  document.querySelectorAll('.scr').forEach(s=>s.classList.remove('on'));
+  document.getElementById(id).classList.add('on');
+}
+
+// Location picker
+function openLoc(){document.getElementById('locmodal').classList.add('on')}
+document.getElementById('locmodal').addEventListener('click',function(e){if(e.target===this)this.classList.remove('on')})
+
+function setLoc(name,el){
+  currentLoc=name;
+  document.querySelectorAll('.locopt').forEach(o=>o.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('locname').textContent=name;
+  document.getElementById('pcloc').textContent=name;
+  document.getElementById('lbname').textContent=name;
+  document.getElementById('recloc').textContent=name;
+  document.querySelectorAll('.locname2').forEach(e=>e.textContent=name);
+  document.getElementById('locmodal').classList.remove('on');
+}
+
+// Camera
 async function startCam(){
+  if(currentStream){currentStream.getTracks().forEach(t=>t.stop())}
   try{
-    const s=await navigator.mediaDevices.getUserMedia({video:{facingMode:'environment',width:{ideal:1920},height:{ideal:1080}}});
+    const s=await navigator.mediaDevices.getUserMedia({
+      video:{facingMode,width:{ideal:1920},height:{ideal:1080}}
+    });
+    currentStream=s;
     document.getElementById('vid').srcObject=s;
     document.getElementById('vid').style.display='block';
     document.getElementById('fbg').style.display='none';
@@ -345,29 +470,57 @@ async function startCam(){
     document.getElementById('vid').style.display='none';
     document.getElementById('fbg').style.display='block';
   }
-  go('ss');runScan();
 }
-function reqCam(){startCam()}
+
+async function flipCam(){
+  facingMode=facingMode==='environment'?'user':'environment';
+  await startCam();
+}
+
+async function reqCam(){
+  await startCam();
+  go('ss');
+  runScan();
+}
 
 function runScan(){
-  setTimeout(()=>{document.getElementById('pcard').classList.add('on');step(1)},1500);
-  setTimeout(()=>toast('f'),2500);
-  setTimeout(()=>{hideT();plant();step(2)},4500);
-  setTimeout(()=>toast('l'),5500);
-  setTimeout(()=>{hideT();step(3)},7500);
-  setTimeout(()=>{document.getElementById('pcard').classList.remove('on');document.getElementById('lb').classList.add('on')},8500);
+  // Reset state
+  document.getElementById('ret').style.opacity='1';
+  document.getElementById('pcard').classList.remove('on');
+  document.getElementById('lb').classList.remove('on');
+  document.getElementById('su').classList.remove('on');
+  document.getElementById('ap').classList.remove('on');
+
+  // Step 1: show reticle scanning, then progress card
+  setTimeout(()=>{document.getElementById('pcard').classList.add('on');step(1)},2000);
+  // Step 2: move forward toast + plant appears
+  setTimeout(()=>toast('f'),3200);
+  setTimeout(()=>{hideT();plant();step(2)},5500);
+  // Step 3: move left toast
+  setTimeout(()=>toast('l'),6500);
+  setTimeout(()=>{hideT();step(3)},9000);
+  // Final: show complete banner
+  setTimeout(()=>{
+    document.getElementById('pcard').classList.remove('on');
+    document.getElementById('lb').classList.add('on');
+  },10000);
 }
 
 function step(n){
   const s=['1/3 surface Detected','2/3 surface Detected','3/3 surface Detected'];
   document.getElementById('psub').textContent=s[n-1];
-  for(let i=1;i<=3;i++){const d=document.getElementById('d'+i);d.className='d';if(i<n)d.classList.add('dn');else if(i===n)d.classList.add('on')}
+  for(let i=1;i<=3;i++){
+    const d=document.getElementById('d'+i);
+    d.className='d';
+    if(i<n)d.classList.add('dn');
+    else if(i===n)d.classList.add('on');
+  }
 }
 
 function plant(){
   document.getElementById('su').classList.add('on');
   document.getElementById('ap').classList.add('on');
-  document.getElementById('ret').style.opacity='0.22';
+  document.getElementById('ret').style.opacity='0.2';
 }
 
 function toast(dir){
@@ -385,24 +538,30 @@ function toast(dir){
   }
   t.classList.add('on');
 }
-function hideT(){document.getElementById('mt').classList.remove('on');document.getElementById('af').classList.remove('on');document.getElementById('al').classList.remove('on')}
+
+function hideT(){
+  document.getElementById('mt').classList.remove('on');
+  document.getElementById('af').classList.remove('on');
+  document.getElementById('al').classList.remove('on');
+}
 
 function selP(b){document.querySelectorAll('.pob').forEach(x=>x.classList.remove('on'));b.classList.add('on')}
 function updS(i){const v=i.value;document.getElementById('sv').textContent=v+'%';document.getElementById('sf').style.width=v+'%';document.getElementById('stb').style.left=v+'%'}
 
-function pSVG(){return`<svg viewBox="0 0 80 80" fill="none" width="64" height="64" style="display:block;margin:0 auto 8px"><ellipse cx="40" cy="72" rx="13" ry="3.5" fill="#000" opacity=".18"/><path d="M30 64 L32 76 L48 76 L50 64 Z" fill="#9B7A52"/><ellipse cx="40" cy="64" rx="11" ry="3" fill="#B8966E"/><path d="M40 64 L40 44" stroke="#3E6B44" stroke-width="2.5" stroke-linecap="round"/><path d="M40 53 Q28 44 22 33 Q33 36 40 49" fill="#1B5E20"/><path d="M40 49 Q52 40 58 29 Q47 32 40 46" fill="#2E7D32"/><path d="M40 46 Q37 36 40 26 Q43 36 40 46" fill="#66BB6A"/></svg>`}
+function pSVG(){return`<div style="text-align:center;margin-bottom:8px"><svg viewBox="0 0 80 80" fill="none" width="64" height="64"><ellipse cx="40" cy="72" rx="13" ry="3.5" fill="#000" opacity=".18"/><path d="M30 64 L32 76 L48 76 L50 64 Z" fill="#9B7A52"/><ellipse cx="40" cy="64" rx="11" ry="3" fill="#B8966E"/><path d="M40 64 L40 44" stroke="#3E6B44" stroke-width="2.5" stroke-linecap="round"/><path d="M40 53 Q28 44 22 33 Q33 36 40 49" fill="#1B5E20"/><path d="M40 49 Q52 40 58 29 Q47 32 40 46" fill="#2E7D32"/><path d="M40 46 Q37 36 40 26 Q43 36 40 46" fill="#66BB6A"/></svg></div>`}
 
 async function loadP(){
-  const c=document.getElementById('pcs');
+  const c=document.getElementById('pcs3');
   try{
-    const r=await fetch(`${SU}/rest/v1/plant_scans?select=plant_name,health_status,care_tips&order=created_at.desc&limit=6`,{headers:{'apikey':SK,'Authorization':`Bearer ${SK}`}});
+    const r=await fetch(`${SU}/rest/v1/plant_scans?select=plant_name,health_status,care_tips&order=created_at.desc&limit=6`,
+      {headers:{'apikey':SK,'Authorization':`Bearer ${SK}`}});
     const d=await r.json();
     if(d&&d.length>0)renderP(d);else fallP();
   }catch(e){fallP()}
 }
 
 function renderP(pl){
-  const c=document.getElementById('pcs');c.innerHTML='';
+  const c=document.getElementById('pcs3');c.innerHTML='';
   pl.forEach(p=>{
     const el=document.createElement('div');el.className='pc2';
     const t=(p.care_tips?.[0]??'Keep in indirect light').substring(0,45);
@@ -412,19 +571,30 @@ function renderP(pl){
 }
 
 function fallP(){
-  const pl=[{n:'Rubber Plant',s:'Healthy',d:'Thrives in indirect light'},{n:'Peace Lily',s:'Healthy',d:'Low light tolerant'},{n:'Pothos',s:'Healthy',d:'Very easy to care for'},{n:'Snake Plant',s:'Healthy',d:'Drought tolerant'}];
-  const c=document.getElementById('pcs');c.innerHTML='';
-  pl.forEach(p=>{const el=document.createElement('div');el.className='pc2';el.innerHTML=pSVG()+`<div class="pn">${p.n}</div><div class="pst">${p.s}</div><div class="pd">${p.d}</div>`;c.appendChild(el)});
+  const pl=[
+    {n:'Rubber Plant',s:'Healthy',d:'Thrives in indirect light'},
+    {n:'Peace Lily',s:'Healthy',d:'Low light tolerant'},
+    {n:'Pothos',s:'Healthy',d:'Very easy to care for'},
+    {n:'Snake Plant',s:'Healthy',d:'Drought tolerant'},
+  ];
+  const c=document.getElementById('pcs3');c.innerHTML='';
+  pl.forEach(p=>{
+    const el=document.createElement('div');el.className='pc2';
+    el.innerHTML=pSVG()+`<div class="pn">${p.n}</div><div class="pst">${p.s}</div><div class="pd">${p.d}</div>`;
+    c.appendChild(el);
+  });
 }
 
 window.addEventListener('load',()=>{
   setTimeout(async()=>{
     try{
       const s=await navigator.mediaDevices.getUserMedia({video:{facingMode:'environment'}});
+      currentStream=s;
       document.getElementById('vid').srcObject=s;
       document.getElementById('vid').style.display='block';
       document.getElementById('fbg').style.display='none';
-      go('ss');runScan();
+      go('ss');
+      runScan();
     }catch(e){go('sp2')}
   },1400);
 });
